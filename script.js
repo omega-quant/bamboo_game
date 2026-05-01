@@ -1,11 +1,12 @@
-alert("JS Loaded");
+alert("You are cute😍😘💕😁👍");
+// ================= CANVAS =================
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 canvas.width = 350;
 canvas.height = 600;
 
-// UI
+// ================= UI =================
 const startScreen = document.getElementById("startScreen");
 const gameOverScreen = document.getElementById("gameOverScreen");
 const playBtn = document.getElementById("playBtn");
@@ -13,7 +14,7 @@ const restartBtn = document.getElementById("restartBtn");
 const finalText = document.getElementById("finalText");
 const scoreDisplay = document.getElementById("score");
 
-// IMAGES
+// ================= IMAGES =================
 const playerImg = new Image();
 playerImg.src = "player.png";
 
@@ -23,57 +24,100 @@ gfImg.src = "gf.png";
 const bambooImg = new Image();
 bambooImg.src = "bamboo.png";
 
-// SOUNDS
+// ================= SOUNDS =================
 const flapSound = new Audio("flap.mp3");
 const winSound = new Audio("win.mp3");
 
-// GAME STATE
+// ================= GAME STATE =================
 let gameRunning = false;
 let gameOver = false;
 let hugging = false;
 let score = 0;
 
-// PLAYER
+// ================= PLAYER =================
 let player;
 
-// GAME DATA
+// ================= GAME DATA =================
 let pipes;
 let frame;
 let pipeSpeed;
+
+// ================= PHYSICS =================
 let gravity = 0.22;
 let jump = -5.5;
 let maxFall = 5;
 
-// GF
+// ================= GF =================
 let gf;
 
-// CLOUDS
+// ================= CLOUDS =================
 let clouds = [];
 
-// INIT GAME
+// ================= INIT =================
 function init() {
-    player = { x: 80, y: 300, width: 50, height: 50, velocity: 0 };
+    player = {
+        x: 80,
+        y: 300,
+        width: 50,
+        height: 50,
+        velocity: 0
+    };
+
     pipes = [];
     frame = 0;
     score = 0;
     pipeSpeed = 1.2;
+
     gameOver = false;
     hugging = false;
 
-    gf = { x: 2800, y: 250, width: 60, height: 60 };
+    gf = {
+        x: 2800,
+        y: 250,
+        width: 60,
+        height: 60
+    };
 
     clouds = [
-        {x: 100, y: 100},
-        {x: 250, y: 200}
+        { x: 100, y: 100 },
+        { x: 250, y: 200 }
     ];
 
-    scoreDisplay.innerText = 0;
+    scoreDisplay.innerText = score;
 }
 
-// CONTROLS
+// ================= START GAME =================
+function startGame() {
+    console.log("Game Started");
+
+    startScreen.classList.add("hidden");
+    gameOverScreen.classList.add("hidden");
+
+    init();
+    gameRunning = true;
+}
+
+// ================= RESTART =================
+function restartGame() {
+    gameOverScreen.classList.add("hidden");
+
+    init();
+    gameRunning = true;
+}
+
+// ================= EVENTS =================
+playBtn.addEventListener("click", startGame);
+playBtn.addEventListener("touchstart", startGame);
+
+restartBtn.addEventListener("click", restartGame);
+restartBtn.addEventListener("touchstart", restartGame);
+
+// ================= CONTROLS =================
 function flap() {
     if (!gameRunning || gameOver) return;
+
     player.velocity = jump;
+
     flapSound.currentTime = 0;
     flapSound.play();
 }
@@ -81,20 +125,7 @@ function flap() {
 document.addEventListener("click", flap);
 document.addEventListener("touchstart", flap);
 
-// START / RESTART
-playBtn.onclick = () => {
-    startScreen.classList.add("hidden");
-    gameRunning = true;
-    init();
-};
-
-restartBtn.onclick = () => {
-    gameOverScreen.classList.add("hidden");
-    gameRunning = true;
-    init();
-};
-
-// CREATE PIPE
+// ================= CREATE PIPE =================
 function createPipe() {
     let gap = 180;
     let gapY = Math.random() * (canvas.height - gap - 100) + 50;
@@ -102,13 +133,13 @@ function createPipe() {
     pipes.push({
         x: canvas.width + 100,
         width: 60,
-        gapY,
+        gapY: gapY,
         gapHeight: gap,
         passed: false
     });
 }
 
-// UPDATE
+// ================= UPDATE =================
 function update() {
     if (!gameRunning) return;
     if (gameOver && !hugging) return;
@@ -132,7 +163,6 @@ function update() {
             score++;
             scoreDisplay.innerText = score;
 
-            // difficulty increase
             pipeSpeed += 0.05;
         }
 
@@ -148,14 +178,15 @@ function update() {
         }
     });
 
-    // WALL
+    // WALL COLLISION
     if (!hugging && (player.y < 0 || player.y + player.height > canvas.height)) {
         endGame(false);
     }
 
-    // GF
+    // MOVE GF
     gf.x -= pipeSpeed;
 
+    // WIN
     if (
         !hugging &&
         player.x < gf.x + gf.width &&
@@ -168,7 +199,7 @@ function update() {
         endGame(true);
     }
 
-    // HUG
+    // HUG ANIMATION
     if (hugging) {
         player.x += (gf.x - player.x) * 0.05;
         player.y += (gf.y - player.y) * 0.05;
@@ -181,7 +212,7 @@ function update() {
     });
 }
 
-// DRAW
+// ================= DRAW =================
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -206,7 +237,7 @@ function draw() {
     ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
 }
 
-// END GAME
+// ================= END GAME =================
 function endGame(win) {
     gameOver = true;
     gameRunning = false;
@@ -214,10 +245,10 @@ function endGame(win) {
     setTimeout(() => {
         gameOverScreen.classList.remove("hidden");
         finalText.innerText = win ? "❤️ You Won ❤️" : "Game Over";
-    }, 1000);
+    }, 800);
 }
 
-// LOOP
+// ================= LOOP =================
 function gameLoop() {
     update();
     draw();
