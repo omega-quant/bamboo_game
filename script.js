@@ -32,7 +32,7 @@ let score = 0;
 let player, pipes, frame, pipeSpeed, gf;
 
 let gravity = 0.15;   // smoother falling
-let jump = -4.2;      // easier control
+let jump = -2.2;      // easier control
 let maxFall = 3.5;    // prevent fast drop
 // INIT
 function init() {
@@ -76,7 +76,7 @@ function createPipe() {
 
     pipes.push({
         x: canvas.width,
-        width: 100, // 🔥 thicker bamboo (visible + fair)
+        width: 500, // 🔥 thicker bamboo (visible + fair)
         gapY: gapY,
         gapHeight: gap,
         passed: false
