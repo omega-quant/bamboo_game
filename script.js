@@ -31,17 +31,16 @@ let score = 0;
 
 let player, pipes, frame, pipeSpeed, gf;
 
-let gravity = 0.22;
-let jump = -5.5;
-let maxFall = 5;
-
+let gravity = 0.18;   // smoother fall
+let jump = -4.5;      // softer jump
+let maxFall = 4;      // limit speed
 // INIT
 function init() {
     player = { x: 80, y: 300, width: 50, height: 50, velocity: 0 };
     pipes = [];
     frame = 0;
     score = 0;
-    pipeSpeed = 1.2;
+    pipeSpeed = 1.0;
     gameOver = false;
     hugging = false;
 
@@ -72,12 +71,12 @@ document.addEventListener("click", () => {
 
 // CREATE PIPE
 function createPipe() {
-    let gap = 180;
-    let gapY = Math.random() * (canvas.height - gap - 100) + 50;
+    let gap = 220; // 🔥 bigger gap (was 180)
+    let gapY = Math.random() * (canvas.height - gap - 120) + 60;
 
     pipes.push({
-        x: canvas.width + 100,
-        width: 60,
+        x: canvas.width,
+        width: 80, // 🔥 thicker bamboo (was 60)
         gapY,
         gapHeight: gap,
         passed: false
@@ -92,15 +91,18 @@ function update() {
     frame++;
 
     player.velocity += gravity;
-    if (player.velocity > maxFall) player.velocity = maxFall;
-    player.y += player.velocity;
 
+if (player.velocity > maxFall) {
+    player.velocity = maxFall;
+}
+
+player.y += player.velocity;
     if (frame % 140 === 0) createPipe();
 
     pipes.forEach(pipe => {
         pipe.x -= pipeSpeed;
 
-        if (!pipe.passed && pipe.x < player.x) {
+        if (!pipe.passed && pipe.x + pipe.width < player.x) {
             pipe.passed = true;
             score++;
             scoreDisplay.innerText = score;
