@@ -31,9 +31,9 @@ let score = 0;
 
 let player, pipes, frame, pipeSpeed, gf;
 
-let gravity = 0.18;   // smoother fall
-let jump = -4.5;      // softer jump
-let maxFall = 4;      // limit speed
+let gravity = 0.15;   // smoother falling
+let jump = -4.2;      // easier control
+let maxFall = 3.5;    // prevent fast drop
 // INIT
 function init() {
     player = { x: 80, y: 300, width: 50, height: 50, velocity: 0 };
@@ -71,18 +71,17 @@ document.addEventListener("click", () => {
 
 // CREATE PIPE
 function createPipe() {
-    let gap = 220; // 🔥 bigger gap (was 180)
+    let gap = 240; // 🔥 bigger gap (easy to pass)
     let gapY = Math.random() * (canvas.height - gap - 120) + 60;
 
     pipes.push({
         x: canvas.width,
-        width: 80, // 🔥 thicker bamboo (was 60)
-        gapY,
+        width: 100, // 🔥 thicker bamboo (visible + fair)
+        gapY: gapY,
         gapHeight: gap,
         passed: false
     });
 }
-
 // UPDATE
 function update() {
     if (!gameRunning) return;
