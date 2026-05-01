@@ -76,7 +76,7 @@ function createPipe() {
 
     pipes.push({
         x: canvas.width,
-        width: 500, // 🔥 thicker bamboo (visible + fair)
+        width: 1000, // 🔥 thicker bamboo (visible + fair)
         gapY: gapY,
         gapHeight: gap,
         passed: false
