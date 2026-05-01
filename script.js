@@ -40,7 +40,7 @@ function init() {
     pipes = [];
     frame = 0;
     score = 0;
-    pipeSpeed = 1.0;
+    pipeSpeed = 0.9;
     gameOver = false;
     hugging = false;
 
