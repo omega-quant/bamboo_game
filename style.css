@@ -25,19 +25,26 @@ canvas {
     height: 100%;
     border-radius: 15px;
     border: 2px solid #333;
+    position: relative;
+    z-index: 1;
 }
 
-/* UI SCREENS */
 .start-screen {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
+
     background: rgba(0,0,0,0.6);
     color: white;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    z-index: 10; /* 🔥 THIS IS THE FIX */
 }
 
 .hidden {
