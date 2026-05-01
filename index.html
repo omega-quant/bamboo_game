@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Love Bamboo Game</title>
+<title>Love Runner</title>
+
 <link rel="stylesheet" href="style.css">
 </head>
 
@@ -13,17 +14,19 @@
 
     <canvas id="gameCanvas"></canvas>
 
-    <div id="startScreen" class="start-screen">
+    <!-- START SCREEN -->
+    <div id="startScreen" class="overlay">
         <h1>❤️ Love Runner ❤️</h1>
-        <button id="playBtn" class="btn">Play</button>
+        <button id="playBtn">Play</button>
     </div>
 
-    <div id="gameOverScreen" class="start-screen hidden">
+    <!-- GAME OVER -->
+    <div id="gameOverScreen" class="overlay hidden">
         <h1 id="finalText">Game Over</h1>
-        <button id="restartBtn" class="btn">Restart</button>
+        <button id="restartBtn">Restart</button>
     </div>
 
-    <div id="score" class="score">0</div>
+    <div id="score">0</div>
 
 </div>
 
