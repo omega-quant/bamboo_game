@@ -5,223 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Love Bamboo Game</title>
 <link rel="stylesheet" href="style.css">
-
-<script src="script.js"></script>
-<style>
-body {
-    margin: 0;
-    overflow: hidden;
-    background: linear-gradient(#87CEEB, #ffffff);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    touch-action: manipulation;
-    font-family: Arial, sans-serif;
-}
-
-canvas {
-    border: 2px solid #333;
-    border-radius: 12px;
-}
-</style>
 </head>
 
 <body>
 
-<canvas id="gameCanvas"></canvas>
+<div class="game-container">
 
-<script>
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+    <canvas id="gameCanvas"></canvas>
 
-canvas.width = 350;
-canvas.height = 600;
+    <!-- START SCREEN -->
+    <div id="startScreen" class="start-screen">
+        <h1>❤️ Love Runner ❤️</h1>
+        <button id="playBtn" class="btn">Play</button>
+    </div>
 
-// ================= IMAGES =================
-const playerImg = new Image();
-playerImg.src = "player.png";
+    <!-- GAME OVER SCREEN -->
+    <div id="gameOverScreen" class="start-screen hidden">
+        <h1 id="finalText">Game Over</h1>
+        <button id="restartBtn" class="btn">Restart</button>
+    </div>
 
-const gfImg = new Image();
-gfImg.src = "gf.png";
+    <!-- SCORE -->
+    <div id="score" class="score">0</div>
 
-const bambooImg = new Image();
-bambooImg.src = "bamboo.png";
+</div>
 
-// ================= PLAYER =================
-let player = {
-    x: 80,
-    y: 300,
-    width: 50,
-    height: 50,
-    velocity: 0,
-    rotation: 0
-};
-
-// ================= PHYSICS =================
-let gravity = 0.22;
-let jump = -5.5;
-let maxFall = 5;
-
-// ================= GAME =================
-let pipes = [];
-let frame = 0;
-let gameOver = false;
-let hugging = false;
-
-// ================= SPEED =================
-let pipeSpeed = 1.2;
-
-// ================= GF =================
-let gf = {
-    x: 2800,
-    y: 250,
-    width: 60,
-    height: 60
-};
-
-// ================= CONTROL =================
-function flap() {
-    if (!gameOver) {
-        player.velocity = jump;
-    }
-}
-
-document.addEventListener("click", flap);
-document.addEventListener("touchstart", flap);
-
-// ================= PIPE =================
-function createPipe() {
-    let gap = 190;
-    let gapY = Math.random() * (canvas.height - gap - 100) + 50;
-
-    pipes.push({
-        x: canvas.width + 100,
-        width: 60,
-        gapY: gapY,
-        gapHeight: gap
-    });
-}
-
-// ================= DRAW =================
-function drawPlayer() {
-    ctx.save();
-    ctx.translate(player.x + player.width/2, player.y + player.height/2);
-
-    player.rotation = player.velocity * 0.04;
-    ctx.rotate(player.rotation);
-
-    ctx.drawImage(playerImg, -25, -25, player.width, player.height);
-
-    ctx.restore();
-}
-
-function drawGF() {
-    ctx.drawImage(gfImg, gf.x, gf.y, gf.width, gf.height);
-}
-
-function drawPipes() {
-    pipes.forEach(pipe => {
-        ctx.drawImage(bambooImg, pipe.x, 0, pipe.width, pipe.gapY);
-
-        ctx.drawImage(
-            bambooImg,
-            pipe.x,
-            pipe.gapY + pipe.gapHeight,
-            pipe.width,
-            canvas.height
-        );
-    });
-}
-
-// ================= UPDATE =================
-function update() {
-    if (gameOver && !hugging) return;
-
-    frame++;
-
-    // gravity
-    player.velocity += gravity;
-    if (player.velocity > maxFall) player.velocity = maxFall;
-    player.y += player.velocity;
-
-    // pipes
-    if (frame % 140 === 0) {
-        createPipe();
-    }
-
-    pipes.forEach(pipe => {
-        pipe.x -= pipeSpeed;
-
-        // collision
-        if (
-            !hugging &&
-            player.x < pipe.x + pipe.width &&
-            player.x + player.width > pipe.x &&
-            (player.y < pipe.gapY ||
-             player.y + player.height > pipe.gapY + pipe.gapHeight)
-        ) {
-            gameOver = true;
-        }
-    });
-
-    // wall collision
-    if (!hugging && (player.y < 0 || player.y + player.height > canvas.height)) {
-        gameOver = true;
-    }
-
-    // move gf
-    gf.x -= pipeSpeed;
-
-    // win
-    if (
-        !hugging &&
-        player.x < gf.x + gf.width &&
-        player.x + player.width > gf.x &&
-        player.y < gf.y + gf.height &&
-        player.y + player.height > gf.y
-    ) {
-        hugging = true;
-        gameOver = true;
-    }
-
-    // hugging animation
-    if (hugging) {
-        player.x += (gf.x - player.x) * 0.05;
-        player.y += (gf.y - player.y) * 0.05;
-    }
-}
-
-// ================= DRAW LOOP =================
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    drawPipes();
-    drawGF();
-    drawPlayer();
-
-    if (gameOver && !hugging) {
-        ctx.fillStyle = "red";
-        ctx.font = "28px Arial";
-        ctx.fillText("Game Over", 90, 300);
-    }
-
-    if (hugging) {
-        ctx.fillStyle = "red";
-        ctx.font = "24px Arial";
-        ctx.fillText("❤️ Hug Complete ❤️", 50, 100);
-    }
-}
-
-// ================= LOOP =================
-function gameLoop() {
-    update();
-    draw();
-    requestAnimationFrame(gameLoop);
-}
-
-gameLoop();
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
