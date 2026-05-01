@@ -1,98 +1,64 @@
-/* RESET */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* BODY */
 body {
     background: linear-gradient(to bottom, #87CEEB, #ffffff);
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     overflow: hidden;
-    touch-action: manipulation;
 }
 
-/* GAME CONTAINER */
 .game-container {
     position: relative;
     width: 350px;
     height: 600px;
 }
 
-/* CANVAS */
 canvas {
     width: 100%;
     height: 100%;
-    border: 2px solid #333;
     border-radius: 15px;
-    background: transparent;
+    border: 2px solid #333;
 }
 
-/* TEXT OVERLAY (Game Over / Win) */
-.game-text {
-    position: absolute;
-    top: 40%;
-    width: 100%;
-    text-align: center;
-    font-size: 28px;
-    font-weight: bold;
-    color: red;
-    pointer-events: none;
-}
-
-/* START SCREEN (for future use) */
+/* UI SCREENS */
 .start-screen {
     position: absolute;
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.6);
+    color: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-/* BUTTON STYLE */
+.hidden {
+    display: none;
+}
+
 .btn {
-    padding: 12px 24px;
+    margin-top: 20px;
+    padding: 12px 25px;
     font-size: 18px;
     border: none;
     border-radius: 10px;
     background: #ff4d6d;
     color: white;
-    margin-top: 15px;
     cursor: pointer;
-    transition: 0.2s;
 }
 
-.btn:active {
-    transform: scale(0.95);
-}
-
-/* SCORE DISPLAY (future use) */
 .score {
     position: absolute;
     top: 10px;
     left: 10px;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
-    color: #000;
-}
-
-/* MOBILE RESPONSIVE */
-@media (max-width: 400px) {
-    .game-container {
-        width: 100vw;
-        height: 100vh;
-    }
-
-    canvas {
-        border-radius: 0;
-        border: none;
-    }
 }
