@@ -3,34 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Love Runner</title>
+<title>Test Game</title>
 
-<link rel="stylesheet" href="style.css">
+<style>
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: skyblue;
+}
+
+#gameContainer {
+    position: relative;
+    width: 350px;
+    height: 600px;
+}
+
+canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: lightblue;
+}
+
+#startScreen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+}
+</style>
 </head>
 
 <body>
 
-<div class="game-container">
+<div id="gameContainer">
 
     <canvas id="gameCanvas"></canvas>
 
-    <!-- START SCREEN -->
-    <div id="startScreen" class="overlay">
-        <h1>❤️ Love Runner ❤️</h1>
+    <div id="startScreen">
+        <h1 style="color:white;">Game</h1>
         <button id="playBtn">Play</button>
     </div>
 
-    <!-- GAME OVER -->
-    <div id="gameOverScreen" class="overlay hidden">
-        <h1 id="finalText">Game Over</h1>
-        <button id="restartBtn">Restart</button>
-    </div>
-
-    <div id="score">0</div>
-
 </div>
 
-<script src="script.js"></script>
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = 350;
+canvas.height = 600;
+
+let gameRunning = false;
+
+// PLAYER
+let y = 300;
+let velocity = 0;
+let gravity = 0.2;
+
+// PLAY BUTTON
+document.getElementById("playBtn").onclick = function() {
+    console.log("CLICK WORKING");
+    document.getElementById("startScreen").style.display = "none";
+    gameRunning = true;
+};
+
+// TAP
+document.addEventListener("click", function() {
+    if (!gameRunning) return;
+    velocity = -5;
+});
+
+// LOOP
+function gameLoop() {
+    if (gameRunning) {
+        velocity += gravity;
+        y += velocity;
+    }
+
+    ctx.clearRect(0,0,350,600);
+
+    ctx.fillStyle = "black";
+    ctx.fillRect(150, y, 50, 50);
+
+    requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+</script>
 
 </body>
 </html>
