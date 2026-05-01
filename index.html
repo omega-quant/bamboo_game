@@ -1,228 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Love Runner</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Runner</title>
 
-<style>
-body {
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: skyblue;
-}
-
-#gameContainer {
-    position: relative;
-    width: 350px;
-    height: 600px;
-}
-
-canvas {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
-/* START SCREEN */
-#startScreen {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 10;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 18px;
-}
-
-/* SCORE */
-#score {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    font-size: 20px;
-}
-</style>
+    <!-- LINK CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div id="gameContainer">
+<div class="game-container">
 
+    <!-- GAME CANVAS -->
     <canvas id="gameCanvas"></canvas>
 
-    <div id="startScreen">
-        <h1 style="color:white;">❤️ Love Runner ❤️</h1>
-        <button id="playBtn">Play</button>
+    <!-- START SCREEN -->
+    <div id="startScreen" class="start-screen">
+        <h1>❤️ Love Runner ❤️</h1>
+        <button id="playBtn" class="btn">Play</button>
     </div>
 
-    <div id="score">0</div>
+    <!-- GAME OVER SCREEN -->
+    <div id="gameOverScreen" class="start-screen hidden">
+        <h1 id="finalText">Game Over</h1>
+        <button id="restartBtn" class="btn">Restart</button>
+    </div>
+
+    <!-- SCORE -->
+    <div id="score" class="score">0</div>
 
 </div>
 
-<script>
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-
-canvas.width = 350;
-canvas.height = 600;
-
-// IMAGES
-const playerImg = new Image();
-playerImg.src = "player.png";
-
-const gfImg = new Image();
-gfImg.src = "gf.png";
-
-const bambooImg = new Image();
-bambooImg.src = "bamboo.png";
-
-// GAME STATE
-let gameRunning = false;
-let gameOver = false;
-let score = 0;
-
-// PLAYER
-let player = {
-    x: 80,
-    y: 300,
-    width: 50,
-    height: 50,
-    velocity: 0
-};
-
-let gravity = 0.22;
-let jump = -5.5;
-
-// PIPES
-let pipes = [];
-let frame = 0;
-let pipeSpeed = 1.2;
-
-// GF
-let gf = {
-    x: 2500,
-    y: 250,
-    width: 60,
-    height: 60
-};
-
-// PLAY BUTTON (WORKING)
-document.getElementById("playBtn").onclick = function() {
-    document.getElementById("startScreen").style.display = "none";
-    gameRunning = true;
-};
-
-// TAP CONTROL
-document.addEventListener("click", function() {
-    if (!gameRunning || gameOver) return;
-    player.velocity = jump;
-});
-
-// CREATE PIPE
-function createPipe() {
-    let gap = 180;
-    let gapY = Math.random() * (canvas.height - gap - 100) + 50;
-
-    pipes.push({
-        x: canvas.width,
-        width: 60,
-        gapY,
-        gapHeight: gap,
-        passed: false
-    });
-}
-
-// UPDATE
-function update() {
-    if (!gameRunning || gameOver) return;
-
-    frame++;
-
-    // PLAYER
-    player.velocity += gravity;
-    player.y += player.velocity;
-
-    // PIPES
-    if (frame % 140 === 0) createPipe();
-
-    pipes.forEach(pipe => {
-        pipe.x -= pipeSpeed;
-
-        // SCORE
-        if (!pipe.passed && pipe.x < player.x) {
-            pipe.passed = true;
-            score++;
-            document.getElementById("score").innerText = score;
-        }
-
-        // COLLISION
-        if (
-            player.x < pipe.x + pipe.width &&
-            player.x + player.width > pipe.x &&
-            (player.y < pipe.gapY ||
-             player.y + player.height > pipe.gapY + pipe.gapHeight)
-        ) {
-            gameOver = true;
-        }
-    });
-
-    // WALL
-    if (player.y < 0 || player.y > canvas.height) {
-        gameOver = true;
-    }
-
-    // GF MOVE
-    gf.x -= pipeSpeed;
-
-    // WIN
-    if (
-        player.x < gf.x + gf.width &&
-        player.x + player.width > gf.x &&
-        player.y < gf.y + gf.height &&
-        player.y + player.height > gf.y
-    ) {
-        alert("❤️ You Win ❤️");
-        gameOver = true;
-    }
-}
-
-// DRAW
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // PIPES
-    pipes.forEach(pipe => {
-        ctx.drawImage(bambooImg, pipe.x, 0, pipe.width, pipe.gapY);
-        ctx.drawImage(bambooImg, pipe.x, pipe.gapY + pipe.gapHeight, pipe.width, canvas.height);
-    });
-
-    // GF
-    ctx.drawImage(gfImg, gf.x, gf.y, gf.width, gf.height);
-
-    // PLAYER
-    ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
-}
-
-// LOOP
-function gameLoop() {
-    update();
-    draw();
-    requestAnimationFrame(gameLoop);
-}
-
-gameLoop();
-</script>
+<!-- LINK JS (VERY IMPORTANT: keep at bottom) -->
+<script src="script.js"></script>
 
 </body>
 </html>
